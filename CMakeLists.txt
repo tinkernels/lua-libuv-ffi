@@ -172,7 +172,8 @@ set(uv_sources
     src/timer.c
     src/uv-common.c
     src/uv-data-getter-setters.c
-    src/version.c)
+    src/version.c
+    src/uv-lua-ffi.c)
 
 if(WIN32)
   list(APPEND uv_defines WIN32_LEAN_AND_MEAN _WIN32_WINNT=0x0602)

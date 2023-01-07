@@ -1842,6 +1842,8 @@ struct uv_loop_s {
 UV_EXTERN void* uv_loop_get_data(const uv_loop_t*);
 UV_EXTERN void uv_loop_set_data(uv_loop_t*, void* data);
 
+#include "uv/uv-lua-ffi.h"
+
 /* Don't export the private CPP symbols. */
 #undef UV_HANDLE_TYPE_PRIVATE
 #undef UV_REQ_TYPE_PRIVATE
