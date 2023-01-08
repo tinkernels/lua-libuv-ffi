@@ -135,64 +135,6 @@ void uv_key_set_lua(void *key, void *value) {
     uv_key_set((uv_key_t *) key, value);
 }
 
-uv_thread_lua_t *uv_new_thread_lua_t(void) {
-    uv_thread_lua_t *lua_th_ = (uv_thread_lua_t *) malloc(sizeof(uv_thread_lua_t));
-    uv_thread_t *th_ = (uv_thread_t *) malloc(sizeof(uv_thread_t));
-    lua_th_->thread = th_;
-    return lua_th_;
-}
-
-void uv_free_thread_lua_t(uv_thread_lua_t *th) {
-    free(th->thread);
-    free(th);
-}
-
-int uv_thread_create_lua(uv_thread_lua_t *tid, uv_thread_cb entry, void *arg) {
-    return uv_thread_create(tid->thread, entry, arg);
-}
-
-int uv_thread_create_ex_lua(uv_thread_lua_t *tid,
-                            const uv_thread_options_t *params,
-                            uv_thread_cb entry,
-                            void *arg) {
-    return uv_thread_create_ex(tid->thread,
-                               params,
-                               entry,
-                               arg);
-}
-
-int uv_thread_setaffinity_lua(uv_thread_lua_t *tid,
-                              char *cpumask,
-                              char *oldmask,
-                              size_t mask_size) {
-    return uv_thread_setaffinity(tid->thread,
-                                 cpumask,
-                                 oldmask,
-                                 mask_size);
-}
-
-int uv_thread_getaffinity_lua(uv_thread_lua_t *tid,
-                              char *cpumask,
-                              size_t mask_size) {
-    return uv_thread_getaffinity(tid->thread,
-                                 cpumask,
-                                 mask_size);
-}
-
-uv_thread_lua_t *uv_thread_self_lua(void) {
-    uv_thread_lua_t *ret_ = (uv_thread_lua_t *) malloc(sizeof(uv_thread_lua_t));;
-    *ret_->thread = uv_thread_self();
-    return ret_;
-}
-
-int uv_thread_join_lua(uv_thread_lua_t *tid) {
-    return uv_thread_join(tid->thread);
-}
-
-int uv_thread_equal_lua(const uv_thread_lua_t *t1, const uv_thread_lua_t *t2) {
-    return uv_thread_equal(t1->thread, t2->thread);
-}
-
 void uv_print_all_handles_lua(uv_loop_t *loop, void *stream) {
     uv_print_all_handles(loop, (FILE *) stream);
 }

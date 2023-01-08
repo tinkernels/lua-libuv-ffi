@@ -3,10 +3,6 @@
 
 #include "uv.h"
 
-typedef struct uv_thread_lua_s {
-    uv_thread_t *thread;
-} uv_thread_lua_t;
-
 UV_EXTERN int uv_mutex_init_lua(void *handle);
 
 UV_EXTERN int uv_mutex_init_recursive_lua(void *handle);
@@ -74,30 +70,6 @@ UV_EXTERN void uv_key_delete_lua(void *key);
 UV_EXTERN void *uv_key_get_lua(void *key);
 
 UV_EXTERN void uv_key_set_lua(void *key, void *value);
-
-UV_EXTERN uv_thread_lua_t *uv_thread_lua_t_new(void);
-
-UV_EXTERN int uv_thread_create_lua(uv_thread_lua_t *tid, uv_thread_cb entry, void *arg);
-
-UV_EXTERN int uv_thread_create_ex_lua(uv_thread_lua_t *tid,
-                                      const uv_thread_options_t *params,
-                                      uv_thread_cb entry,
-                                      void *arg);
-
-UV_EXTERN int uv_thread_setaffinity_lua(uv_thread_lua_t *tid,
-                                        char *cpumask,
-                                        char *oldmask,
-                                        size_t mask_size);
-
-UV_EXTERN int uv_thread_getaffinity_lua(uv_thread_lua_t *tid,
-                                        char *cpumask,
-                                        size_t mask_size);
-
-UV_EXTERN uv_thread_lua_t *uv_thread_self_lua(void);
-
-UV_EXTERN int uv_thread_join_lua(uv_thread_lua_t *tid);
-
-UV_EXTERN int uv_thread_equal_lua(const uv_thread_lua_t *t1, const uv_thread_lua_t *t2);
 
 UV_EXTERN void uv_print_all_handles_lua(uv_loop_t *loop, void *stream);
 
