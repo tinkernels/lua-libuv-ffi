@@ -6,6 +6,8 @@
 #include <stdlib.h>
 
 #include "uv-ffi-type.h"
+#include "uv-ffi-type-win.h"
+#include "uv-ffi-type-unix.h"
 
 /* >>>>>>>> function >>>>>>>> */
 unsigned int uv_version(void);
@@ -772,74 +774,6 @@ int uv_dlsym(uv_lib_t *lib, const char *name, void **ptr);
 const char *uv_dlerror(const uv_lib_t *lib);
 
 const char *uv_dlerror(const uv_lib_t *lib);
-
-int uv_mutex_init_lua(void *handle);
-
-int uv_mutex_init_recursive_lua(void *handle);
-
-void uv_mutex_destroy_lua(void *handle);
-
-void uv_mutex_lock_lua(void *handle);
-
-int uv_mutex_trylock_lua(void *handle);
-
-void uv_mutex_unlock_lua(void *handle);
-
-int uv_rwlock_init_lua(void *rwlock);
-
-void uv_rwlock_destroy_lua(void *rwlock);
-
-void uv_rwlock_rdlock_lua(void *rwlock);
-
-int uv_rwlock_tryrdlock_lua(void *rwlock);
-
-void uv_rwlock_rdunlock_lua(void *rwlock);
-
-void uv_rwlock_wrlock_lua(void *rwlock);
-
-int uv_rwlock_trywrlock_lua(void *rwlock);
-
-void uv_rwlock_wrunlock_lua(void *rwlock);
-
-int uv_sem_init_lua(void *sem, unsigned int value);
-
-void uv_sem_destroy_lua(void *sem);
-
-void uv_sem_post_lua(void *sem);
-
-void uv_sem_wait_lua(void *sem);
-
-int uv_sem_trywait_lua(void *sem);
-
-int uv_cond_init_lua(void *cond);
-
-void uv_cond_destroy_lua(void *cond);
-
-void uv_cond_signal_lua(void *cond);
-
-void uv_cond_broadcast_lua(void *cond);
-
-int uv_barrier_init_lua(void *barrier, unsigned int count);
-
-void uv_barrier_destroy_lua(void *barrier);
-
-int uv_barrier_wait_lua(void *barrier);
-
-void uv_cond_wait_lua(void *cond, void *mutex);
-
-int uv_cond_timedwait_lua(void *cond,
-                          void *mutex,
-                          uint64_t timeout);
-
-void uv_once_lua(void *guard, void (*callback)(void));
-
-int uv_key_create_lua(void *key);
-
-void uv_key_delete_lua(void *key);
-
-void *uv_key_get_lua(void *key);
-
-void uv_key_set_lua(void *key, void *value);
 
 int uv_gettimeofday(uv_timeval64_t *tv);
 

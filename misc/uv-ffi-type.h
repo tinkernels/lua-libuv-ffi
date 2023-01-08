@@ -5,9 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "uv-ffi-type-win.h"
-#include "uv-ffi-type-unix.h"
-
 /* >>>>>>>> typedef universe >>>>>>>> */
 
 typedef void *(*uv_malloc_func)(size_t size);
@@ -35,7 +32,7 @@ typedef struct uv_prepare_s uv_prepare_t;
 typedef struct uv_shutdown_s uv_shutdown_t;
 typedef struct uv_stream_s uv_stream_t;
 
-typedef void (*uv_prepare_cb)(uv_prepare_t* handle);
+typedef void (*uv_prepare_cb)(uv_prepare_t *handle);
 
 typedef void (*uv_shutdown_cb)(uv_shutdown_t *req, int status);
 
@@ -116,6 +113,7 @@ typedef enum {
     UV_TTY_UNSUPPORTED
 } uv_tty_vtermstate_t;
 typedef struct uv_pipe_s uv_pipe_t;
+typedef struct uv_poll_s uv_poll_t;
 
 typedef void (*uv_poll_cb)(uv_poll_t *handle, int status, int events);
 

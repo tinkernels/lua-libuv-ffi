@@ -1,13 +1,56 @@
 local ffi = require 'ffi'
 local C = ffi.C
-local uv = ffi.load('uv')
 
-ffi.cdef [[
+-- load lib
+local uv_ffi = ffi.load('build/libuv.dylib')
 
-/* >>>>>>>> typedef universe *1* >>>>>>>> */
-typedef struct uv_prepare_s uv_prepare_t;
-/* <<<<<<<< typedef universe *1* <<<<<<<< */
+local os_name = ffi.os
 
+if os_name == "Windows" then
+    -- ffi types for windows
+    ffi.cdef [[
+/* >>>>>>>> typedef win variant >>>>>>>> */
+typedef enum {
+    UV_UNKNOWN_REQ = 0,
+    UV_REQ,
+    UV_CONNECT,
+    UV_WRITE,
+    UV_SHUTDOWN,
+    UV_UDP_SEND,
+    UV_FS,
+    UV_WORK,
+    UV_GETADDRINFO,
+    UV_GETNAMEINFO,
+    UV_RANDOM,
+    UV_ACCEPT,
+    UV_FS_EVENT_REQ,
+    UV_POLL_REQ,
+    UV_PROCESS_EXIT,
+    UV_READ,
+    UV_UDP_RECV,
+    UV_WAKEUP,
+    UV_SIGNAL_REQ,
+    UV_REQ_TYPE_MAX
+} uv_req_type;
+
+typedef void *HANDLE;
+typedef HANDLE uv_os_fd_t;
+typedef unsigned long ULONG;
+typedef struct uv_buf_t {
+    ULONG len;
+    char *base;
+} uv_buf_t;
+
+typedef int uv_file;
+typedef uintptr_t SOCKET;
+typedef SOCKET uv_os_sock_t;
+typedef unsigned char uv_uid_t;
+typedef unsigned char uv_gid_t;
+typedef int uv_pid_t;
+/* <<<<<<<< typedef win variant <<<<<<<< */
+]] else
+    -- ffi types for unix
+    ffi.cdef [[
 /* >>>>>>>> typedef unix variant >>>>>>>> */
 typedef enum {
     UV_UNKNOWN_REQ = 0,
@@ -32,23 +75,19 @@ typedef struct uv_buf_t {
 
 typedef int uv_file;
 typedef int uv_os_sock_t;
-typedef struct uv_poll_s uv_poll_t;
-
-typedef void (*uv_prepare_cb)(uv_prepare_t *handle);
 
 typedef unsigned int uv_uid_t;
 typedef unsigned int uv_gid_t;
 typedef int uv_pid_t;
-/* FIX: type uv_mutex_t */
-/* FIX: type uv_sem_t */
-/* FIX: type uv_rwlock_t */
-/* FIX: type uv_cond_t */
-/* FIX: type uv_barrier_t */
-/* FIX: type uv_once_t */
-/* FIX: type uv_key_t */
 /* <<<<<<<< typedef unix variant <<<<<<<< */
+]]
+end
 
-/* >>>>>>>> typedef universe *2* >>>>>>>> */
+-- ffi universe types
+ffi.cdef[[
+/* >>>>>>>> typedef universe >>>>>>>> */
+typedef struct uv_poll_s uv_poll_t;
+
 typedef void *(*uv_malloc_func)(size_t size);
 
 typedef void *(*uv_realloc_func)(void *ptr, size_t size);
@@ -70,8 +109,11 @@ typedef enum {
 } uv_run_mode;
 
 typedef struct uv_handle_s uv_handle_t;
+typedef struct uv_prepare_s uv_prepare_t;
 typedef struct uv_shutdown_s uv_shutdown_t;
 typedef struct uv_stream_s uv_stream_t;
+
+typedef void (*uv_prepare_cb)(uv_prepare_t* handle);
 
 typedef void (*uv_shutdown_cb)(uv_shutdown_t *req, int status);
 
@@ -359,7 +401,10 @@ typedef struct {
     int32_t tv_usec;
 } uv_timeval64_t;
 /* <<<<<<<< typedef universe *2* <<<<<<<< */
+]]
 
+-- ffi functions
+ffi.cdef [[
 /* >>>>>>>> function >>>>>>>> */
 unsigned int uv_version(void);
 
@@ -1126,74 +1171,6 @@ const char *uv_dlerror(const uv_lib_t *lib);
 
 const char *uv_dlerror(const uv_lib_t *lib);
 
-int uv_mutex_init_lua(void *handle);
-
-int uv_mutex_init_recursive_lua(void *handle);
-
-void uv_mutex_destroy_lua(void *handle);
-
-void uv_mutex_lock_lua(void *handle);
-
-int uv_mutex_trylock_lua(void *handle);
-
-void uv_mutex_unlock_lua(void *handle);
-
-int uv_rwlock_init_lua(void *rwlock);
-
-void uv_rwlock_destroy_lua(void *rwlock);
-
-void uv_rwlock_rdlock_lua(void *rwlock);
-
-int uv_rwlock_tryrdlock_lua(void *rwlock);
-
-void uv_rwlock_rdunlock_lua(void *rwlock);
-
-void uv_rwlock_wrlock_lua(void *rwlock);
-
-int uv_rwlock_trywrlock_lua(void *rwlock);
-
-void uv_rwlock_wrunlock_lua(void *rwlock);
-
-int uv_sem_init_lua(void *sem, unsigned int value);
-
-void uv_sem_destroy_lua(void *sem);
-
-void uv_sem_post_lua(void *sem);
-
-void uv_sem_wait_lua(void *sem);
-
-int uv_sem_trywait_lua(void *sem);
-
-int uv_cond_init_lua(void *cond);
-
-void uv_cond_destroy_lua(void *cond);
-
-void uv_cond_signal_lua(void *cond);
-
-void uv_cond_broadcast_lua(void *cond);
-
-int uv_barrier_init_lua(void *barrier, unsigned int count);
-
-void uv_barrier_destroy_lua(void *barrier);
-
-int uv_barrier_wait_lua(void *barrier);
-
-void uv_cond_wait_lua(void *cond, void *mutex);
-
-int uv_cond_timedwait_lua(void *cond,
-                          void *mutex,
-                          uint64_t timeout);
-
-void uv_once_lua(void *guard, void (*callback)(void));
-
-int uv_key_create_lua(void *key);
-
-void uv_key_delete_lua(void *key);
-
-void *uv_key_get_lua(void *key);
-
-void uv_key_set_lua(void *key, void *value);
-
 int uv_gettimeofday(uv_timeval64_t *tv);
 
 int uv_thread_getcpu(void);
@@ -1204,6 +1181,4 @@ void uv_loop_set_data(uv_loop_t *, void *data);
 /* <<<<<<<< function <<<<<<<< */
 ]]
 
-local _1 = ffi.typeof('struct sockaddr_in')
-
-print ''
+print(ffi.string(uv_ffi.uv_version_string()))
