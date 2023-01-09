@@ -1,4 +1,7 @@
 .vscode
+lua-libuv-ffi/*.so
+lua-libuv-ffi/*.dll
+
 *.swp
 *.[oa]
 *.l[oa]

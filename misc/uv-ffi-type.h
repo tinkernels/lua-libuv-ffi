@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "uv-ffi-type-pre.h"
+
 /* >>>>>>>> typedef universe >>>>>>>> */
 
 typedef void *(*uv_malloc_func)(size_t size);
@@ -91,6 +93,7 @@ typedef enum {
     UV_LEAVE_GROUP = 0,
     UV_JOIN_GROUP
 } uv_membership;
+
 typedef struct uv_udp_send_s uv_udp_send_t;
 
 typedef void (*uv_udp_send_cb)(uv_udp_send_t *req, int status);
@@ -112,6 +115,7 @@ typedef enum {
     UV_TTY_SUPPORTED,
     UV_TTY_UNSUPPORTED
 } uv_tty_vtermstate_t;
+
 typedef struct uv_pipe_s uv_pipe_t;
 typedef struct uv_poll_s uv_poll_t;
 
@@ -161,6 +165,7 @@ typedef enum {
     UV_NONBLOCK_PIPE = 0x40,
     UV_OVERLAPPED_PIPE = 0x40
 } uv_stdio_flags;
+
 typedef struct uv_stdio_container_s {
     uv_stdio_flags flags;
 
@@ -169,6 +174,16 @@ typedef struct uv_stdio_container_s {
         int fd;
     } data;
 } uv_stdio_container_t;
+
+enum uv_process_flags {
+  UV_PROCESS_SETUID = (1 << 0),
+  UV_PROCESS_SETGID = (1 << 1),
+  UV_PROCESS_WINDOWS_VERBATIM_ARGUMENTS = (1 << 2),
+  UV_PROCESS_DETACHED = (1 << 3),
+  UV_PROCESS_WINDOWS_HIDE = (1 << 4),
+  UV_PROCESS_WINDOWS_HIDE_CONSOLE = (1 << 5),
+  UV_PROCESS_WINDOWS_HIDE_GUI = (1 << 6)
+};
 
 typedef struct uv_process_options_s {
     uv_exit_cb exit_cb;
@@ -182,6 +197,7 @@ typedef struct uv_process_options_s {
     uv_uid_t uid;
     uv_gid_t gid;
 } uv_process_options_t;
+
 typedef struct uv_work_s uv_work_t;
 
 typedef void (*uv_work_cb)(uv_work_t *req);
@@ -192,6 +208,7 @@ typedef struct {
     long tv_sec;
     long tv_usec;
 } uv_timeval_t;
+
 typedef struct {
     uv_timeval_t ru_utime; /* user CPU time used */
     uv_timeval_t ru_stime; /* system CPU time used */
@@ -210,6 +227,7 @@ typedef struct {
     uint64_t ru_nvcsw;     /* voluntary context switches */
     uint64_t ru_nivcsw;    /* involuntary context switches */
 } uv_rusage_t;
+
 typedef struct uv_passwd_s uv_passwd_t;
 typedef struct uv_cpu_info_s uv_cpu_info_t;
 typedef struct uv_interface_address_s uv_interface_address_t;
@@ -256,11 +274,14 @@ typedef enum {
     UV_FS_MKSTEMP,
     UV_FS_LUTIME
 } uv_fs_type;
+
+typedef int uv_file;
 typedef struct uv_fs_s uv_fs_t;
 typedef struct {
     long tv_sec;
     long tv_nsec;
 } uv_timespec_t;
+
 typedef struct {
     uint64_t st_dev;
     uint64_t st_mode;
@@ -313,6 +334,7 @@ typedef struct {
     void *handle;
     char *errmsg;
 } uv_lib_t;
+
 struct sockaddr_in;
 struct sockaddr_in6;
 
@@ -320,6 +342,7 @@ typedef struct {
     int64_t tv_sec;
     int32_t tv_usec;
 } uv_timeval64_t;
+
 /* <<<<<<<< typedef universe *2* <<<<<<<< */
 
 #endif /* UV_FFI_TYPE_H */

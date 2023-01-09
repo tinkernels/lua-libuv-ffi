@@ -10,6 +10,7 @@
 #include "uv-ffi-type-unix.h"
 
 /* >>>>>>>> function >>>>>>>> */
+
 unsigned int uv_version(void);
 
 const char *uv_version_string(void);
@@ -782,6 +783,7 @@ int uv_thread_getcpu(void);
 void *uv_loop_get_data(const uv_loop_t *);
 
 void uv_loop_set_data(uv_loop_t *, void *data);
+
 /* <<<<<<<< function <<<<<<<< */
 
 #endif /* UV_FFI_FUNCTION_H */

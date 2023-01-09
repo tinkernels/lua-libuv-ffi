@@ -1,12 +1,22 @@
 local ffi = require 'ffi'
-local C = ffi.C
-
--- load lib
-local uv_ffi = ffi.load('build/libuv.dylib')
-
+local pathlib = require 'path'
 local os_name = ffi.os
 
-if os_name == "Windows" then
+local self_debuginfo = debug.getinfo(1, "S")
+local self_dirname = self_debuginfo and self_debuginfo.source:match('^@?(.*[/\\])') or nil
+if not self_dirname then error "Lua debug info doesn't contain 「source」" end
+local uv_ffi, ok
+
+-- load lib
+if os_name == 'Windows' then
+    ok, uv_ffi = xpcall(ffi.load, print, pathlib.join(self_dirname, 'uv.dll'))
+    if not ok then error 'looad libuv ffi clib failed' end
+else
+    ok, uv_ffi = xpcall(ffi.load, print, pathlib.join(self_dirname, 'libuv1.so'))
+    if not ok then error 'looad libuv ffi clib failed' end
+end
+
+if os_name == 'Windows' then
     -- ffi types for windows
     ffi.cdef [[
 /* >>>>>>>> typedef win variant >>>>>>>> */
@@ -48,10 +58,14 @@ typedef unsigned char uv_uid_t;
 typedef unsigned char uv_gid_t;
 typedef int uv_pid_t;
 /* <<<<<<<< typedef win variant <<<<<<<< */
-]] else
+]]
+else
     -- ffi types for unix
     ffi.cdef [[
 /* >>>>>>>> typedef unix variant >>>>>>>> */
+
+/* const char* test_str = "1111"; */
+
 typedef enum {
     UV_UNKNOWN_REQ = 0,
     UV_REQ,
@@ -84,7 +98,7 @@ typedef int uv_pid_t;
 end
 
 -- ffi universe types
-ffi.cdef[[
+ffi.cdef [[
 /* >>>>>>>> typedef universe >>>>>>>> */
 typedef struct uv_poll_s uv_poll_t;
 
@@ -1182,3 +1196,4 @@ void uv_loop_set_data(uv_loop_t *, void *data);
 ]]
 
 print(ffi.string(uv_ffi.uv_version_string()))
+print(uv_ffi.test_str)
