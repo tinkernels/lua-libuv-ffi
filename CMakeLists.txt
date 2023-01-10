@@ -739,9 +739,9 @@ if(LIBUV_BUILD_SHARED)
   else()
     set(LUA_FFI_UV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/lua-libuv-ffi/src/lua-libuv-ffi/libuv-ffi.so)
   endif()
-  add_custom_command(TARGET uv POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:uv> ${LUA_FFI_UV_DEST}
-  )
+#   add_custom_command(TARGET uv POST_BUILD
+#     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:uv> ${LUA_FFI_UV_DEST}
+#   )
 endif()
 
 if(MSVC)
@@ -756,4 +756,5 @@ message(STATUS "summary of build options:
       CFLAGS:        ${CMAKE_C_FLAGS_${_build_type}} ${CMAKE_C_FLAGS}
 ")
 
-install(SCRIPT ${CMAKE_SOURCE_DIR}/PostInstall4LuaFFI.cmake)
+# add_subdirectory(${CMAKE_SOURCE_DIR}/lua-libuv-ffi)
+# install(CODE "set(LUA_FFI_SRC_DIR \"${CMAKE_SOURCE_DIR}/lua-libuv-ffi/src}\")")
