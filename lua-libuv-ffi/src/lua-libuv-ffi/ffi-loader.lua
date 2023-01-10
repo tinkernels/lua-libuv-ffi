@@ -3,15 +3,15 @@ local pathlib = require 'path'
 local os_name = ffi.os
 
 local self_debuginfo = debug.getinfo(1, "S")
-local self_dirname = self_debuginfo and self_debuginfo.source:match('^@?(.*[/\\])') or nil
-if not self_dirname then error "Lua debug info doesn't contain 「source」" end
+local self_dpath = self_debuginfo and self_debuginfo.source:match('^@?(.*[/\\])') or nil
+if not self_dpath then error "Lua debug info doesn't contain 「source」" end
 local uv_ffi, ok
 
 -- load lib
 if os_name == "windows" then
-    ok, uv_ffi = xpcall(ffi.load, print, pathlib.join(self_dirname, 'libuv-ffi.dll'))
+    ok, uv_ffi = xpcall(ffi.load, print, pathlib.join(self_dpath, 'libuv-ffi.dll'))
 else
-    ok, uv_ffi = xpcall(ffi.load, print, pathlib.join(self_dirname, 'libuv-ffi.so'))
+    ok, uv_ffi = xpcall(ffi.load, print, pathlib.join(self_dpath, 'libuv-ffi.so'))
 end
 if not ok then error 'looad libuv ffi clib failed' end
 

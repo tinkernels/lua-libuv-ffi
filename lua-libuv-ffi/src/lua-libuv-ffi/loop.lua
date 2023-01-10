@@ -1,4 +1,4 @@
-local uv_ffi = require 'lua-libuv-ffi.libuv-ffi'
+local uv_ffi = require 'lua-libuv-ffi.ffi-loader'
 
 local _M = {
     ffi = uv_ffi
