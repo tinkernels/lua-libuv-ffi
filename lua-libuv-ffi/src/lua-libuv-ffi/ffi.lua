@@ -8,13 +8,8 @@ if not self_dirname then error "Lua debug info doesn't contain 「source」" end
 local uv_ffi, ok
 
 -- load lib
-if os_name == 'Windows' then
-    ok, uv_ffi = xpcall(ffi.load, print, pathlib.join(self_dirname, 'uv.dll'))
-    if not ok then error 'looad libuv ffi clib failed' end
-else
-    ok, uv_ffi = xpcall(ffi.load, print, pathlib.join(self_dirname, 'libuv1.so'))
-    if not ok then error 'looad libuv ffi clib failed' end
-end
+ok, uv_ffi = xpcall(ffi.load, print, pathlib.join(self_dirname, 'uv-ffi.so'))
+if not ok then error 'looad libuv ffi clib failed' end
 
 if os_name == 'Windows' then
     -- ffi types for windows
@@ -1196,4 +1191,4 @@ void uv_loop_set_data(uv_loop_t *, void *data);
 ]]
 
 print(ffi.string(uv_ffi.uv_version_string()))
-print(uv_ffi.test_str)
+print ''

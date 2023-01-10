@@ -1,6 +1,6 @@
 .vscode
-lua-libuv-ffi/*.so
-lua-libuv-ffi/*.dll
+lua-libuv-ffi/**/*.so
+lua-libuv-ffi/**/*.dll
 
 *.swp
 *.[oa]

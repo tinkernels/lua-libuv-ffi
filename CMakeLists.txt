@@ -733,11 +733,8 @@ if(LIBUV_BUILD_SHARED)
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-  if(WIN32)
-    set(LUA_FFI_UV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/lua-libuv-ffi/uv.dll)
-  else()
-    set(LUA_FFI_UV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/lua-libuv-ffi/libuv.so)
-  endif()
+  # lua-libuv-ffi custom commands
+  set(LUA_FFI_UV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/lua-libuv-ffi/src/lua-libuv-ffi/libuv-ffi.so)
   add_custom_command(TARGET uv POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:uv> ${LUA_FFI_UV_DEST}
   )
@@ -754,3 +751,5 @@ message(STATUS "summary of build options:
       C compiler:    ${CMAKE_C_COMPILER} (${CMAKE_C_COMPILER_ID})
       CFLAGS:        ${CMAKE_C_FLAGS_${_build_type}} ${CMAKE_C_FLAGS}
 ")
+
+install(SCRIPT "${CMAKE_SOURCE_DIR}/PostInstall4LuaFFI.cmake")
