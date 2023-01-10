@@ -1,1 +1,0 @@
-install(SCRIPT ${CMAKE_SOURCE_DIR}/lua-libuv-ffi/PostInstall4LuaFFI.cmake)

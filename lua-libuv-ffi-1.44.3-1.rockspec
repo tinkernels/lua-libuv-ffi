@@ -23,7 +23,9 @@ build = {
   type = 'cmake',
   variables = {
      CMAKE_INSTALL_PREFIX="$(PREFIX)",
-     LIBUV_BUILD_SHARED="ON"
+     LIBUV_BUILD_SHARED="ON",
+     LIBUV_BUILD_TESTS="OFF",
+     LIBUV_BUILD_BENCH="OFF"
   },
   install = {
     lua = {

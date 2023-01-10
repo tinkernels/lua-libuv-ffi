@@ -713,13 +713,13 @@ set(libdir ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 set(prefix ${CMAKE_INSTALL_PREFIX})
 configure_file(libuv-static.pc.in libuv-static.pc @ONLY)
 
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_DOCDIR})
-install(FILES ${PROJECT_BINARY_DIR}/libuv-static.pc
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-install(TARGETS uv_a EXPORT libuvConfig
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(EXPORT libuvConfig DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libuv)
+# install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+# install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_DOCDIR})
+# install(FILES ${PROJECT_BINARY_DIR}/libuv-static.pc
+#         DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+# install(TARGETS uv_a EXPORT libuvConfig
+#         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+# install(EXPORT libuvConfig DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libuv)
 
 if(LIBUV_BUILD_SHARED)
   # The version in the filename is mirroring the behaviour of autotools.
@@ -727,21 +727,21 @@ if(LIBUV_BUILD_SHARED)
           VERSION ${UV_VERSION_MAJOR}.0.0
           SOVERSION ${UV_VERSION_MAJOR})
   configure_file(libuv.pc.in libuv.pc @ONLY)
-  install(FILES ${PROJECT_BINARY_DIR}/libuv.pc
-          DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-  install(TARGETS uv EXPORT libuvConfig
-          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+#   install(FILES ${PROJECT_BINARY_DIR}/libuv.pc
+#           DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+#   install(TARGETS uv EXPORT libuvConfig
+#           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
   # lua-libuv-ffi custom commands
   if(WIN32)
     set(LUA_FFI_UV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/lua-libuv-ffi/src/lua-libuv-ffi/libuv-ffi.dll)
   else()
     set(LUA_FFI_UV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/lua-libuv-ffi/src/lua-libuv-ffi/libuv-ffi.so)
   endif()
-#   add_custom_command(TARGET uv POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:uv> ${LUA_FFI_UV_DEST}
-#   )
+  add_custom_command(TARGET uv POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:uv> ${LUA_FFI_UV_DEST}
+  )
 endif()
 
 if(MSVC)
@@ -756,5 +756,3 @@ message(STATUS "summary of build options:
       CFLAGS:        ${CMAKE_C_FLAGS_${_build_type}} ${CMAKE_C_FLAGS}
 ")
 
-# add_subdirectory(${CMAKE_SOURCE_DIR}/lua-libuv-ffi)
-# install(CODE "set(LUA_FFI_SRC_DIR \"${CMAKE_SOURCE_DIR}/lua-libuv-ffi/src}\")")
