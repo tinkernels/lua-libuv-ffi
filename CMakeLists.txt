@@ -756,3 +756,4 @@ message(STATUS "summary of build options:
       CFLAGS:        ${CMAKE_C_FLAGS_${_build_type}} ${CMAKE_C_FLAGS}
 ")
 
+install(CODE "message('** SKIP INSTALL **')")
