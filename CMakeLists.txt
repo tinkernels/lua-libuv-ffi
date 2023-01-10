@@ -734,11 +734,7 @@ if(LIBUV_BUILD_SHARED)
 #           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 #           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
-  if(WIN32)
-    set(LUA_FFI_UV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/lua-libuv-ffi/src/lua-libuv-ffi/${UV_FFI_WIN_DLL_NAME}.dll)
-  else()
-    set(LUA_FFI_UV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/lua-libuv-ffi/src/lua-libuv-ffi/libuv-ffi.so)
-  endif()
+  set(LUA_FFI_UV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/lua-libuv-ffi/src/lua-libuv-ffi/libuv-ffi.so)
   add_custom_command(TARGET uv POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:uv> ${LUA_FFI_UV_DEST}
   )

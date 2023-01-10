@@ -28,20 +28,11 @@ build = {
             ["lua-libuv-ffi.loop"]       = "lua-libuv-ffi/src/lua-libuv-ffi/loop.lua",
         }
     },
-    platforms = {
-        windows = {
-            type = 'command',
-            build_command = "cmd /c lua-libuv-ffi/build.cmd",
-            install_command = "cmd /c echo '**- SKIP-CMAKE-INSTALL -**'"
-        },
-        unix = {
-            type = 'cmake',
-            variables = {
-                CMAKE_INSTALL_PREFIX = "$(PREFIX)",
-                LIBUV_BUILD_SHARED = "ON",
-                LIBUV_BUILD_TESTS = "OFF",
-                LIBUV_BUILD_BENCH = "OFF"
-            },
-        }
-    }
+    type = 'cmake',
+    variables = {
+        CMAKE_INSTALL_PREFIX = "$(PREFIX)",
+        LIBUV_BUILD_SHARED = "ON",
+        LIBUV_BUILD_TESTS = "OFF",
+        LIBUV_BUILD_BENCH = "OFF"
+    },
 }
