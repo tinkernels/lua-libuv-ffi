@@ -1,5 +1,5 @@
 package = "lua-libuv-ffi"
-version = "1.44.3"
+version = "1.44.3-1"
 source = {
   url = 'git://github.com/tinkernels/lua-libuv-ffi.git'
 }
@@ -22,23 +22,14 @@ dependencies = {
 build = {
   type = 'cmake',
   variables = {
-     CMAKE_C_FLAGS="$(CFLAGS)",
-     CMAKE_MODULE_LINKER_FLAGS="$(LIBFLAG)",
-     LUA_LIBDIR="$(LUA_LIBDIR)",
-     LUA_INCDIR="$(LUA_INCDIR)",
-     LUA_LIBFILE="$(LUALIB)",
-     LUA="$(LUA)",
-     LIBDIR="$(LIBDIR)",
-     LUADIR="$(LUADIR)",
+     CMAKE_INSTALL_PREFIX="$(PREFIX)",
   },
   install = {
     lua = {
-            ["lua-libuv-ffi/libuv-ffi.so"] = "lua-libuv-ffi/src/lua-libuv-ffi/libuv-ffi.so"
+            ["lua-libuv-ffi"] = "lua-libuv-ffi/src/lua-libuv-ffi.lua",
+            ["lua-libuv-ffi.libuv-ffi"] = "lua-libuv-ffi/src/lua-libuv-ffi/libuv-ffi.so",
+            ["lua-libuv-ffi.ffi"] = "lua-libuv-ffi/src/lua-libuv-ffi/libuv-ffi.lua",
+            ["lua-libuv-ffi.loop"] = "lua-libuv-ffi/src/lua-libuv-ffi/loop.lua",
         }
     }
-}
-
-test = {
---   type = "command",
---   script = ,
 }
