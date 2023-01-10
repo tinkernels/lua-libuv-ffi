@@ -734,9 +734,8 @@ if(LIBUV_BUILD_SHARED)
 #           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 #           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
-  # lua-libuv-ffi custom commands
   if(WIN32)
-    set(LUA_FFI_UV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/lua-libuv-ffi/src/lua-libuv-ffi/libuv-ffi.dll)
+    set(LUA_FFI_UV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/lua-libuv-ffi/src/lua-libuv-ffi/${UV_FFI_WIN_DLL_NAME}.dll)
   else()
     set(LUA_FFI_UV_DEST ${CMAKE_CURRENT_SOURCE_DIR}/lua-libuv-ffi/src/lua-libuv-ffi/libuv-ffi.so)
   endif()
@@ -757,4 +756,4 @@ message(STATUS "summary of build options:
       CFLAGS:        ${CMAKE_C_FLAGS_${_build_type}} ${CMAKE_C_FLAGS}
 ")
 
-install(CODE "message(STATUS \"**- SKIP-INSTALL -**\")")
+install(CODE "message(STATUS \"**- SKIP-CMAKE-INSTALL -**\")")
