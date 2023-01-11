@@ -1,0 +1,30 @@
+local _uv = require 'lua-libuv-ffi.ffi-loader'
+local uv_ffi = _uv.uv_ffi
+local ffi = _uv.c_ffi
+local common = require 'lua-libuv-ffi.common'
+local handle = require 'lua-libuv-ffi.handle'
+
+local _Mt = setmetatable({}, { __index = handle._Mt })
+local _M = setmetatable({ _Mt = _Mt }, { __index = _Mt })
+
+local check_ctype = common.handle_types.CHECK.ctype
+ffi.metatype(check_ctype, { __index = _Mt })
+
+function _M.new()
+    return ffi.new(check_ctype)
+end
+
+function _Mt:init(loop)
+    return uv_ffi.uv_check_init(loop, self)
+end
+
+function _Mt:start(cb)
+    local cb_ = ffi.cast(common.callback_types.check_cb, cb)
+    return uv_ffi.uv_check_start(self, cb_)
+end
+
+function _Mt:stop()
+    return uv_ffi.uv_check_stop(self)
+end
+
+return _M

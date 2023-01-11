@@ -2,7 +2,7 @@ type map macro regex:
     .*\(\s*(.*)\s*,\s*(.*)\s*\).*
 
 type lua replace:
-    $1 = { type = uv_ffi.UV_$1, cptr_type = ffi.typeof('uv_$2_t*')},
+    $1 = { type = uv_ffi.UV_$1, ctype = ffi.typeof('uv_$2_t'), cptr_type = ffi.typeof('uv_$2_t*')},
 
 structs define replace:
     struct uv_$2_s {uint8_t _[$];};
