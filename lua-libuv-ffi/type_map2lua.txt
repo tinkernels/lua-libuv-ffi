@@ -1,0 +1,15 @@
+type map macro regex:
+    .*\(\s*(.*)\s*,\s*(.*)\s*\).*
+
+type lua replace:
+    $1 = { type = uv_ffi.UV_$1, cptr_type = ffi.typeof('uv_$2_t*')},
+
+structs define replace:
+    struct uv_$2_s {uint8_t _[$];};
+    
+handle structs size replace:
+   , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_$1)) 
+
+req structs size replace:
+    , tonumber(uv_ffi.uv_req_size(uv_ffi.UV_$1)) 
+

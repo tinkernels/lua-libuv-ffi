@@ -8,17 +8,35 @@ if not self_dpath then error "Lua debug info doesn't contain 「source」" end
 local uv_ffi, ok
 
 -- load lib
-if os_name == "windows" then
-    ok, uv_ffi = xpcall(ffi.load, print, pathlib.join(self_dpath, 'libuv-ffi.dll'))
-else
-    ok, uv_ffi = xpcall(ffi.load, print, pathlib.join(self_dpath, 'libuv-ffi.so'))
-end
+ok, uv_ffi = xpcall(ffi.load, print, pathlib.join(self_dpath, 'libuv-ffi.so'))
 if not ok then error 'looad libuv ffi clib failed' end
 
 if os_name == 'Windows' then
     -- ffi types for windows
     ffi.cdef [[
 /* >>>>>>>> typedef win variant >>>>>>>> */
+
+typedef void* HANDLE;
+typedef uintptr_t SOCKET;
+typedef uintptr_t ULONG_PTR;
+typedef typedef unsigned long DWORD;
+typedef wchar_t WCHAR;
+typedef void* PVOID;
+
+typedef SOCKET uv_os_sock_t;
+typedef int uv_pid_t;
+typedef HANDLE uv_os_fd_t;
+
+typedef unsigned long ULONG;
+
+typedef struct uv_buf_t {
+    ULONG len;
+    char* base;
+} uv_buf_t;
+
+typedef unsigned char uv_uid_t;
+typedef unsigned char uv_gid_t;
+
 typedef enum {
     UV_UNKNOWN_REQ = 0,
     UV_REQ,
@@ -42,28 +60,25 @@ typedef enum {
     UV_REQ_TYPE_MAX
 } uv_req_type;
 
-typedef void *HANDLE;
-typedef HANDLE uv_os_fd_t;
-typedef unsigned long ULONG;
-typedef struct uv_buf_t {
-    ULONG len;
-    char *base;
-} uv_buf_t;
-
-typedef int uv_file;
-typedef uintptr_t SOCKET;
-typedef SOCKET uv_os_sock_t;
-typedef unsigned char uv_uid_t;
-typedef unsigned char uv_gid_t;
-typedef int uv_pid_t;
 /* <<<<<<<< typedef win variant <<<<<<<< */
+
 ]]
 else
     -- ffi types for unix
     ffi.cdef [[
 /* >>>>>>>> typedef unix variant >>>>>>>> */
 
-/* const char* test_str = "1111"; */
+typedef int uv_os_fd_t;
+typedef int uv_os_sock_t;
+typedef int uv_pid_t;
+
+typedef struct uv_buf_t {
+    char *base;
+    size_t len;
+} uv_buf_t;
+
+typedef unsigned int uv_uid_t;
+typedef unsigned int uv_gid_t;
 
 typedef enum {
     UV_UNKNOWN_REQ = 0,
@@ -80,18 +95,6 @@ typedef enum {
     UV_REQ_TYPE_MAX
 } uv_req_type;
 
-typedef int uv_os_fd_t;
-typedef struct uv_buf_t {
-    char *base;
-    size_t len;
-} uv_buf_t;
-
-typedef int uv_file;
-typedef int uv_os_sock_t;
-
-typedef unsigned int uv_uid_t;
-typedef unsigned int uv_gid_t;
-typedef int uv_pid_t;
 /* <<<<<<<< typedef unix variant <<<<<<<< */
 ]]
 end
@@ -99,7 +102,6 @@ end
 -- ffi universe types
 ffi.cdef [[
 /* >>>>>>>> typedef universe >>>>>>>> */
-typedef struct uv_poll_s uv_poll_t;
 
 typedef void *(*uv_malloc_func)(size_t size);
 
@@ -126,7 +128,7 @@ typedef struct uv_prepare_s uv_prepare_t;
 typedef struct uv_shutdown_s uv_shutdown_t;
 typedef struct uv_stream_s uv_stream_t;
 
-typedef void (*uv_prepare_cb)(uv_prepare_t* handle);
+typedef void (*uv_prepare_cb)(uv_prepare_t *handle);
 
 typedef void (*uv_shutdown_cb)(uv_shutdown_t *req, int status);
 
@@ -185,6 +187,7 @@ typedef enum {
     UV_LEAVE_GROUP = 0,
     UV_JOIN_GROUP
 } uv_membership;
+
 typedef struct uv_udp_send_s uv_udp_send_t;
 
 typedef void (*uv_udp_send_cb)(uv_udp_send_t *req, int status);
@@ -206,7 +209,9 @@ typedef enum {
     UV_TTY_SUPPORTED,
     UV_TTY_UNSUPPORTED
 } uv_tty_vtermstate_t;
+
 typedef struct uv_pipe_s uv_pipe_t;
+typedef struct uv_poll_s uv_poll_t;
 
 typedef void (*uv_poll_cb)(uv_poll_t *handle, int status, int events);
 
@@ -254,6 +259,7 @@ typedef enum {
     UV_NONBLOCK_PIPE = 0x40,
     UV_OVERLAPPED_PIPE = 0x40
 } uv_stdio_flags;
+
 typedef struct uv_stdio_container_s {
     uv_stdio_flags flags;
 
@@ -262,6 +268,16 @@ typedef struct uv_stdio_container_s {
         int fd;
     } data;
 } uv_stdio_container_t;
+
+enum uv_process_flags {
+  UV_PROCESS_SETUID = (1 << 0),
+  UV_PROCESS_SETGID = (1 << 1),
+  UV_PROCESS_WINDOWS_VERBATIM_ARGUMENTS = (1 << 2),
+  UV_PROCESS_DETACHED = (1 << 3),
+  UV_PROCESS_WINDOWS_HIDE = (1 << 4),
+  UV_PROCESS_WINDOWS_HIDE_CONSOLE = (1 << 5),
+  UV_PROCESS_WINDOWS_HIDE_GUI = (1 << 6)
+};
 
 typedef struct uv_process_options_s {
     uv_exit_cb exit_cb;
@@ -275,6 +291,7 @@ typedef struct uv_process_options_s {
     uv_uid_t uid;
     uv_gid_t gid;
 } uv_process_options_t;
+
 typedef struct uv_work_s uv_work_t;
 
 typedef void (*uv_work_cb)(uv_work_t *req);
@@ -285,6 +302,7 @@ typedef struct {
     long tv_sec;
     long tv_usec;
 } uv_timeval_t;
+
 typedef struct {
     uv_timeval_t ru_utime; /* user CPU time used */
     uv_timeval_t ru_stime; /* system CPU time used */
@@ -303,6 +321,7 @@ typedef struct {
     uint64_t ru_nvcsw;     /* voluntary context switches */
     uint64_t ru_nivcsw;    /* involuntary context switches */
 } uv_rusage_t;
+
 typedef struct uv_passwd_s uv_passwd_t;
 typedef struct uv_cpu_info_s uv_cpu_info_t;
 typedef struct uv_interface_address_s uv_interface_address_t;
@@ -349,11 +368,14 @@ typedef enum {
     UV_FS_MKSTEMP,
     UV_FS_LUTIME
 } uv_fs_type;
+
+typedef int uv_file;
 typedef struct uv_fs_s uv_fs_t;
 typedef struct {
     long tv_sec;
     long tv_nsec;
 } uv_timespec_t;
+
 typedef struct {
     uint64_t st_dev;
     uint64_t st_mode;
@@ -406,6 +428,7 @@ typedef struct {
     void *handle;
     char *errmsg;
 } uv_lib_t;
+
 struct sockaddr_in;
 struct sockaddr_in6;
 
@@ -413,12 +436,16 @@ typedef struct {
     int64_t tv_sec;
     int32_t tv_usec;
 } uv_timeval64_t;
+
 /* <<<<<<<< typedef universe *2* <<<<<<<< */
 ]]
 
 -- ffi functions
 ffi.cdef [[
 /* >>>>>>>> function >>>>>>>> */
+
+void free(void *ptr);
+
 unsigned int uv_version(void);
 
 const char *uv_version_string(void);
@@ -1191,7 +1218,79 @@ int uv_thread_getcpu(void);
 void *uv_loop_get_data(const uv_loop_t *);
 
 void uv_loop_set_data(uv_loop_t *, void *data);
+
 /* <<<<<<<< function <<<<<<<< */
 ]]
 
-return uv_ffi
+-- structs size define
+ffi.cdef(
+    [[ struct uv_loop_s {uint8_t _[$];}; ]]
+    , tonumber(uv_ffi.uv_loop_size())
+)
+
+ffi.cdef(
+    [[ 
+    struct uv_async_s {uint8_t _[$];};
+    struct uv_check_s {uint8_t _[$];};
+    struct uv_fs_event_s {uint8_t _[$];};
+    struct uv_fs_poll_s {uint8_t _[$];};
+    struct uv_handle_s {uint8_t _[$];};
+    struct uv_idle_s {uint8_t _[$];};
+    struct uv_pipe_s {uint8_t _[$];};
+    struct uv_poll_s {uint8_t _[$];};
+    struct uv_prepare_s {uint8_t _[$];};
+    struct uv_process_s {uint8_t _[$];};
+    struct uv_stream_s {uint8_t _[$];};
+    struct uv_tcp_s {uint8_t _[$];};
+    struct uv_timer_s {uint8_t _[$];};
+    struct uv_tty_s {uint8_t _[$];};
+    struct uv_udp_s {uint8_t _[$];};
+    struct uv_signal_s {uint8_t _[$];};
+]]
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_ASYNC))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_CHECK))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_FS_EVENT))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_FS_POLL))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_HANDLE))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_IDLE))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_NAMED_PIPE))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_POLL))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_PREPARE))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_PROCESS))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_STREAM))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_TCP))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_TIMER))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_TTY))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_UDP))
+    , tonumber(uv_ffi.uv_handle_size(uv_ffi.UV_SIGNAL))
+)
+
+ffi.cdef(
+    [[
+    struct uv_req_s {uint8_t _[$];};
+    struct uv_connect_s {uint8_t _[$];};
+    struct uv_write_s {uint8_t _[$];};
+    struct uv_shutdown_s {uint8_t _[$];};
+    struct uv_udp_send_s {uint8_t _[$];};
+    struct uv_fs_s {uint8_t _[$];};
+    struct uv_work_s {uint8_t _[$];};
+    struct uv_getaddrinfo_s {uint8_t _[$];};
+    struct uv_getnameinfo_s {uint8_t _[$];};
+    struct uv_random_s {uint8_t _[$];};
+]]
+    , tonumber(uv_ffi.uv_req_size(uv_ffi.UV_REQ))
+    , tonumber(uv_ffi.uv_req_size(uv_ffi.UV_CONNECT))
+    , tonumber(uv_ffi.uv_req_size(uv_ffi.UV_WRITE))
+    , tonumber(uv_ffi.uv_req_size(uv_ffi.UV_SHUTDOWN))
+    , tonumber(uv_ffi.uv_req_size(uv_ffi.UV_UDP_SEND))
+    , tonumber(uv_ffi.uv_req_size(uv_ffi.UV_FS))
+    , tonumber(uv_ffi.uv_req_size(uv_ffi.UV_WORK))
+    , tonumber(uv_ffi.uv_req_size(uv_ffi.UV_GETADDRINFO))
+    , tonumber(uv_ffi.uv_req_size(uv_ffi.UV_GETNAMEINFO))
+    , tonumber(uv_ffi.uv_req_size(uv_ffi.UV_RANDOM))
+)
+
+return {
+    uv_ffi = uv_ffi,
+    c_ffi = ffi
+}

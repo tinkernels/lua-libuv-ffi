@@ -5,7 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "uv-ffi-type-pre.h"
+#include "uv-ffi-type-unix.h"
+#include "uv-ffi-type-win.h"
 
 /* >>>>>>>> typedef universe >>>>>>>> */
 

@@ -6,8 +6,6 @@
 #include <stdlib.h>
 
 #include "uv-ffi-type.h"
-#include "uv-ffi-type-win.h"
-#include "uv-ffi-type-unix.h"
 
 /* >>>>>>>> function >>>>>>>> */
 
