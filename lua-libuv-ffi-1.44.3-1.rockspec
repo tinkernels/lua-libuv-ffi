@@ -30,7 +30,7 @@ build = {
     },
     type = 'cmake',
     variables = {
-        CMAKE_INSTALL_PREFIX = "$(PREFIX)",
+        CMAKE_INSTALL_PREFIX = "$(PREFIX)/LUA-LIBUV-FFI-INSTALL",
         LIBUV_BUILD_SHARED = "ON",
         LIBUV_BUILD_TESTS = "OFF",
         LIBUV_BUILD_BENCH = "OFF"
