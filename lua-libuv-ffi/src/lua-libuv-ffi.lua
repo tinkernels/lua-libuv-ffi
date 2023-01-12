@@ -38,7 +38,7 @@ local _M = {
     fs = require 'lua-libuv-ffi.fs',
     threadpool = require 'lua-libuv-ffi.threadpool',
     getaddrinfo = require 'lua-libuv-ffi.getaddrinfo',
-    getnameinfo = require '',
+    getnameinfo = require 'lua-libuv-ffi.getnameinfo',
     metrics = require 'lua-libuv-ffi.metrics',
 }
 

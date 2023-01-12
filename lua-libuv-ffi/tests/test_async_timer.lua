@@ -15,9 +15,8 @@ local function timer_func(h)
     async_task:send()
     if count > 200 then
         timer_task:stop()
-        async_task:close(nil)
+        async_task:close()
         timer_task:close()
-        default_loop:stop()
     end
 end
 
@@ -26,5 +25,5 @@ timer_task:init(default_loop)
 timer_task:start(timer_func, 1000, 10)
 
 default_loop:run(uv.UV_RUN_DEFAULT)
-
+default_loop:stop()
 print ''
