@@ -3,7 +3,7 @@ local pathlib = require 'path'
 local os_name = ffi.os
 
 local self_debuginfo = debug.getinfo(1, "S")
-local self_dpath = self_debuginfo and self_debuginfo.source:match('^@?(.*[/\\])') or nil
+local self_dpath = self_debuginfo and self_debuginfo.source:match('^@?(.*)[/\\]') or nil
 if not self_dpath then error "Lua debug info doesn't contain 「source」" end
 local uv_ffi, ok
 
