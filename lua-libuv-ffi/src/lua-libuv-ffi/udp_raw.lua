@@ -1,8 +1,8 @@
 local _uv = require 'lua-libuv-ffi.ffi-loader'
 local uv_ffi = _uv.uv_ffi
 local ffi = _uv.c_ffi
-local common = require 'lua-libuv-ffi.common'
-local handle = require 'lua-libuv-ffi.handle'
+local common = require 'lua-libuv-ffi.common_raw'
+local handle = require 'lua-libuv-ffi.handle_raw'
 
 local _Mt = setmetatable({}, { __index = handle._Mt })
 local _M = setmetatable({ _Mt = _Mt }, { __index = _Mt })

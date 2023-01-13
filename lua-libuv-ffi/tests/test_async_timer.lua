@@ -1,8 +1,8 @@
 local uv = require 'lua-libuv-ffi'
-local default_loop = uv.loop.default
+local default_loop = uv.loop_raw.default
 
-local timer_task = uv.timer.new()
-local async_task = uv.async.new()
+local timer_task = uv.timer_raw.new()
+local async_task = uv.async_raw.new()
 
 local function async_func(h)
     print('async function fired.')
